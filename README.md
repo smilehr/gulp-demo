@@ -81,5 +81,28 @@ something to how to build one gulp development
         ```
 
       2. 编译`sass`
+
+        ```js
+        npm install --save-dev gulp-sass
+
+        gulp.task('buildSass', function() {
+          return gulp.src('src/css/*.scss')
+            .pipe(sass())
+            .pipe(gulp.dest("dist/css"));
+        });
+        ```
+      3. 编译的同时压缩css
+
+        ```js
+        npm install --save-dev gulp-minify-css
+
+        gulp.task('buildSass', function() {
+          return gulp.src('src/css/*.scss')
+            .pipe(sass())
+            .pipe(cssmin())
+            .pipe(gulp.dest("dist/css"));
+        });
+        ```
+
     4. 使用`Watchify`
     5. 使用`Browserify`

@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
     less = require('gulp-less'),
+    sass = require('gulp-sass'),
+    cssmin = require('gulp-minify-css'),
     babel = require("gulp-babel"),
     sourcemaps = require("gulp-sourcemaps"),
     ts = require("gulp-typescript"),
@@ -27,5 +29,14 @@ gulp.task('buildTs', function () {
 gulp.task('buildLess', function() {
   return gulp.src('src/css/*.less')
     .pipe(less())
+    .pipe(cssmin())
+    .pipe(gulp.dest("dist/css"));
+});
+
+//编译sass
+gulp.task('buildSass', function() {
+  return gulp.src('src/css/*.scss')
+    .pipe(sass())
+    .pipe(cssmin())
     .pipe(gulp.dest("dist/css"));
 });
