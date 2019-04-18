@@ -67,7 +67,8 @@ something to how to build one gulp development
 
       ```
 
-    3. 编译`less` or `sass` 
+    3. 编译`less` or `sass`
+
       1. 编译`less`
 
         ```js
