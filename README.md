@@ -105,5 +105,30 @@ something to how to build one gulp development
         });
         ```
 
-    4. 使用`Watchify`
-    5. 使用`Browserify`
+    4. 使用del清除文件
+
+    ```js
+    npm install --save-dev del
+    
+    vae del = require('del');
+
+    gulp.task('clean', function() {
+      return del('dist/*');
+    });
+    ```
+
+    5. 使用`gulp-watch`监听文件变化，并自动编译
+
+      ```js
+      npm install --save-dev gulp-watch
+
+      var watch = require('gulp-watch');
+      gulp.task('watch', function() {
+        var watcher = watch('src/css/*.scss', gulp.series('buildSass'));
+        return watcher.on('change', function(e) {
+
+        });
+      });
+      ```
+
+    6. 使用`Browserify`

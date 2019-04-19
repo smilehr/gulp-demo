@@ -1,4 +1,7 @@
 var gulp = require('gulp'),
+    del = require('del'),
+    path = require('path'),
+    watch = require('gulp-watch'),
     less = require('gulp-less'),
     sass = require('gulp-sass'),
     cssmin = require('gulp-minify-css'),
@@ -36,7 +39,19 @@ gulp.task('buildLess', function() {
 //编译sass
 gulp.task('buildSass', function() {
   return gulp.src('src/css/*.scss')
-    .pipe(sass())
+    .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(cssmin())
     .pipe(gulp.dest("dist/css"));
+});
+
+//清空dist文件夹
+gulp.task('clean', function() {
+  return del(['dist/*']);
+});
+
+//监听文件变化并自动编译
+gulp.task('watch', function() {
+  return watch('src/css/*.scss', gulp.series('buildSass')).on('change', function(e) {
+    console.log(e.type);
+  });
 });
