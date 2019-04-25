@@ -9,16 +9,6 @@ var gulp = require('gulp'),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json");
 
-//清空dist文件夹
-gulp.task('clean', function() {
-  return del(['dist/*']);
-});
-
-var paraTask = gulp.parallel(js, transTs, transLess, tranSass);
-gulp.task('build', gulp.series(paraTask), function() {
-  console.log('finish task build!');
-});
-
 //使用babel编译es
 function js() {
   return gulp.src("src/js/*.es6")
@@ -30,29 +20,43 @@ function js() {
     .pipe(gulp.dest("dist/js"));  
 }
 
-function transTs() {
-  return tsProject.src()
-  .pipe(tsProject())
-  .js.pipe(gulp.dest("dist/js"));
-}
+gulp.task("buildEs", function () {
+  return gulp.src("src/js/*.es6")
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest("dist/js"));
+});
 
-function transLess() {
+//编译ts
+gulp.task('buildTs', function () {
+  return tsProject.src()
+    .pipe(tsProject())
+    .js.pipe(gulp.dest("dist/js"));
+});
+
+//编译less
+gulp.task('buildLess', function() {
   return gulp.src('src/css/*.less')
     .pipe(less())
     .pipe(cssmin())
     .pipe(gulp.dest("dist/css"));
-}
+});
 
-function tranSass() {
+//编译sass
+gulp.task('buildSass', function() {
   return gulp.src('src/css/*.scss')
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(cssmin())
     .pipe(gulp.dest("dist/css"));
-}
+});
 
-function copyImg() {
-
-}
+//清空dist文件夹
+gulp.task('clean', function() {
+  return del(['dist/*']);
+});
 
 //监听文件变化并自动编译
 gulp.task('watch', function() {
@@ -66,6 +70,8 @@ gulp.task('watch', function() {
     }
   });
 });
+
+gulp.task('build', gulp.parallel('buildEs'));
 
 //废弃
 gulp.task('watch2', function() {  //使用gulp-watch
