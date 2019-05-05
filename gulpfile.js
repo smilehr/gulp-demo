@@ -1,33 +1,53 @@
 var gulp = require('gulp'),
+    fs = require('fs');
     del = require('del'),
     watch = require('gulp-watch'),
     less = require('gulp-less'),
     sass = require('gulp-sass'),
     cssmin = require('gulp-minify-css'),
     babel = require("gulp-babel"),
+    uglify = require("gulp-uglify"),
     sourcemaps = require("gulp-sourcemaps"),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json");
+
+var env = 'dev'; // 用于执行gulp任务时的判断
+function set_env(type){ 
+  env = type || 'dev';
+  // 生成env.js文件，用于开发页面时，判断环境
+  fs.writeFile("./env.js", 'export default ' + env + ';', function(err){
+    err && console.log(err);
+  });
+}
 
 //清空dist文件夹
 gulp.task('clean', function() {
   return del(['dist/*']);
 });
 
-var paraTask = gulp.parallel(js, transTs, transLess, tranSass);
-gulp.task('build', gulp.series(paraTask), function() {
+var paraTask = gulp.parallel(html, js, transTs, transLess, tranSass);
+
+gulp.task('dev', function() {});
+gulp.task('build', gulp.series(clean, paraTask), function() {
   console.log('finish task build!');
 });
 
+function html() {
+  return gulp.src("src/*.html")
+    .pipe(gulp.dest('dist'));
+}
+
 //使用babel编译es
 function js() {
-  return gulp.src("src/js/*.es6")
+  return gulp.src("src/js/*.js")
     .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['@babel/preset-env']
+    .pipe(babel())
+    .pipe(uglify({
+      mangle: true,//类型：Boolean 默认：true 是否修改变量名
+      compress: true//类型：Boolean 默认：true 是否完全压缩
     }))
     .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest("dist/js"));  
+    .pipe(gulp.dest("dist/js"));
 }
 
 function transTs() {
@@ -52,6 +72,10 @@ function tranSass() {
 
 function copyImg() {
 
+}
+
+function clean() {
+  return del('dist/*');
 }
 
 //监听文件变化并自动编译

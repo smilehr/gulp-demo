@@ -55,7 +55,7 @@
 6. gulp.src 添加base选项，修改存放路径
 
     ```js
-    gulp.src('src/js/*.js',{base:'websrc'}).pipe(gulp.dest('dist'));    //输出目录为dist/js/*.js
+    gulp.src('src/js/*.js',{base:'dist'}).pipe(gulp.dest('dist'));    //输出目录为dist/js/*.js
     ```
 
 7. gulp.src 接收的文件匹配字符串会顺序解释，所以你可以写成这样 gulp.src([‘.js’, ‘!b.js’, ‘bad.js’])（排除所有以 b 开头的 JS 文件但是除了 bad.js）

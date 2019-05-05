@@ -13,7 +13,7 @@ something to how to build one gulp development
 
     2. 安装gulp依赖
 
-        ```
+        ```js
         npm install --global gulp
         npm install --save-dev gulp
         ```
@@ -29,16 +29,27 @@ something to how to build one gulp development
         ```
 
 2. 使用`babel`编译js
-    1. 编译`es6`
+
+    1. copy `html` 文件
 
         ```js
-        npm install --save-dev gulp-babel @babel/core @babel/preset-env
+        function html() {
+          return gulp.src("src/*.html", {base: 'dist'})
+            .pipe(gulp.dest('dist'));
+        }
+        ```
+
+    2. 编译`es6`
+
+        ```js
+        npm install --save-dev gulp-babel @babel/core @babel/preset-env gulp-uglify
         gulpfile.js:
         var gulp = require('gulp');
         var babel = require("gulp-babel");
 
         gulp.task("default", function () {
           return gulp.src("src/js/*")
+            .pipe(uglify()) //压缩js
             .pipe(babel({
               presets: ['@babel/preset-env']
             }))
@@ -46,7 +57,7 @@ something to how to build one gulp development
         });
         ```
 
-    2. 编译`typescript` ---配置在`tsconfig.json`
+    3. 编译`typescript` ---配置在`tsconfig.json`
 
       ```js
         npm install --save-dev typescript gulp gulp-typescript
@@ -54,7 +65,6 @@ something to how to build one gulp development
         var gulp = require("gulp");
         var ts = require("gulp-typescript");
         var tsProject = ts.createProject("tsconfig.json");
-
         gulp.task("default", function () {
             return tsProject.src()
                 .pipe(tsProject())
@@ -63,11 +73,7 @@ something to how to build one gulp development
 
       ```
 
-      ```js
-
-      ```
-
-    3. 编译`less` or `sass`
+    4. 编译`less` or `sass`
 
       1. 编译`less`
 
@@ -105,7 +111,7 @@ something to how to build one gulp development
         });
         ```
 
-    4. 使用del清除文件
+    5. 使用del清除文件
 
     ```js
     npm install --save-dev del
@@ -117,7 +123,7 @@ something to how to build one gulp development
     });
     ```
 
-    5. 使用`gulp-watch`监听文件变化，并自动编译
+    1. 使用`gulp-watch`监听文件变化，并自动编译
 
       ```js
       npm install --save-dev gulp-watch
@@ -131,4 +137,4 @@ something to how to build one gulp development
       });
       ```
 
-    6. 使用`Browserify`
+    2. 使用`Browserify`
