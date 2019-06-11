@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
     del = require('del'),
     oPath = require('path'),
-    watch = require('gulp-watch'),
     less = require('gulp-less'),
     sass = require('gulp-sass'),
     cssmin = require('gulp-minify-css'),
@@ -65,9 +64,6 @@ gulp.task('clean', function() {
   return del(['dist/*']);
 });
 
-gulp.task('test', gulp.series(setEnv('dev'), js), function() {});
-
-gulp.task('dev', function() {});
 gulp.task('build', gulp.series(clean, paraTask), function() {
   console.log('finish task build!');
 });
@@ -108,30 +104,3 @@ function tranSass() {
 function clean() {
   return del('dist/*');
 }
-
-/**
- * 根据路径删除相应文件，用于gulp.watch().on('all', function(e, path, states) {});
- * @param {*} e 
- * @param {*} path 
- * @param {*} states 
- */
-function dFByPath(e, path, states) {
-  var filename = '';
-  if (e === 'unlink') { //删除文件时
-
-  } else if (e === 'add') { //新增文件
-
-  } else if (e === 'change') {  //修改文件
-
-  }
-}
-
-//监听文件变化并自动编译
-gulp.task('watch_bak', function() {
-  gulp.watch('src/css/*', gulp.series('buildSass')).on('all', dFByPath);
-});
-
-//废弃
-gulp.task('watch2', function() {  //使用gulp-watch
-  watch('src/css/*.scss', gulp.series('buildSass'));
-});
