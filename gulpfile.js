@@ -31,7 +31,7 @@ gulp.task('watch', function(done) {
       del('dist/css/' + oPath.basename(path, '.less') + '.css');
     }
   });
-  gulp.watch('src/js/*.js', gulp.series(js)).on('all', function(e, path, states) {
+  gulp.watch('src/js/**/*.js', gulp.series(js)).on('all', function(e, path, states) {
     if (e === 'unlink') {
       del('dist/js/' + oPath.basename(path, '.js') + '.js');
     }
@@ -75,7 +75,7 @@ function html() {
 
 //使用babel编译es
 function js() {
-  var stream = gulp.src("src/js/*.js").pipe(sourcemaps.init()).pipe(babel());
+  var stream = gulp.src("src/js/**/*.js").pipe(sourcemaps.init()).pipe(babel());
   env === 'dev' ? stream.pipe(uglify({ mangle: true, compress: true })) : '';
   return stream.pipe(sourcemaps.write(".")).pipe(gulp.dest("dist/js"));
 }
